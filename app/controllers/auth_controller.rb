@@ -10,6 +10,14 @@ class AuthController < ApplicationController
     end
   end
 
+  def auto_login
+    user_id = request.headers["Authorization"]
+
+    user = User.find(user_id)
+
+    render json: user
+  end
+
   def signup
     user = User.create(first_name: params[:firstName], last_name: params[:lastName], username: params[:username], password: params[:password])
 
