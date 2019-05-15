@@ -1,11 +1,17 @@
 class UsersController < ApplicationController
 
-  def create
+  def index
+    users = User.all
+
+    render json: users, each_serializer: UserSerializer
+  end
+
+  def signup
     user = User.new(
-      username: params[:username]
-      first_name: params[:first_name]
-      last_name: params[:last_name]
-      password: params[:password]
+      username: params[:username],
+      first_name: params[:first_name],
+      last_name: params[:last_name],
+      password: params[:password],
       avatar_url: "https://www.limestone.edu/sites/default/files/user-icon.png"
     )
 
@@ -15,6 +21,7 @@ class UsersController < ApplicationController
       render json: {user: user, token: token}
     else
       render json: {errors: user.errors.full_messages}
+    end
   end
 
 end
