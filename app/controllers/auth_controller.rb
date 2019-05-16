@@ -21,8 +21,8 @@ class AuthController < ApplicationController
 
   def signup
     user = User.create(first_name: params[:firstName], last_name: params[:lastName], username: params[:username], password: params[:password])
-
-    render json: user
+    token = encode_token(user.id)
+    render json: {user: user, token: token}
   end
 
 end
