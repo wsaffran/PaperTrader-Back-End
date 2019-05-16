@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::API
+  before_action :authorized
 
   def encode_token(user_id)
     JWT.encode({user_id: user_id}, "12345")

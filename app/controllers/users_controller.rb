@@ -6,22 +6,19 @@ class UsersController < ApplicationController
     render json: users, each_serializer: UserSerializer
   end
 
-  def signup
-    user = User.new(
-      username: params[:username],
-      first_name: params[:first_name],
-      last_name: params[:last_name],
-      password: params[:password],
-      avatar_url: "https://www.limestone.edu/sites/default/files/user-icon.png"
-    )
+  def create
+    user = User.create(user_params)
 
-    if user.save
-      token = encode_token(user.id)
-
-      render json: {user: user, token: token}
+    if user.valid?
+      token = encode_token(user_id: user.id)
+      render json: {user: UserSerializer.new(user), token: token}, status: :created
     else
-      render json: {errors: user.errors.full_messages}
+      render json: {error: "failed to create user"}, status: :not_acceptable
     end
+  end
+
+  def user_params
+    params.require(:user).permit(:username, :first_name, :last_name, :password, :avatar_url)
   end
 
 end
