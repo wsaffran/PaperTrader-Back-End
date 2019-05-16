@@ -1,7 +1,8 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :game_players
+  attributes :id, :game_players, :games
 
   has_many :game_players, serializer: GamePlayerSerializer
+  has_many :games, through: :game_players
 
   # def game_players
   #   self.object.game_players.map do |gp|

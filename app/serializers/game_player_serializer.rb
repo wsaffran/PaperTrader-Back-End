@@ -1,5 +1,5 @@
 class GamePlayerSerializer < ActiveModel::Serializer
-  attributes :id, :transactions
+  attributes :id, :game, :user, :transactions
 
   belongs_to :game
   belongs_to :user
