@@ -7,7 +7,7 @@ class GamePlayersController < ApplicationController
   end
 
   def join_game
-    game_player = GamePlayer.create(user_id: params[:user_id], game_id: params[:game_id])
+    game_player = GamePlayer.create(user_id: params[:user_id], game_id: params[:game_id], cash_balance: params[:cash_balance])
 
     render json: game_player
   end
