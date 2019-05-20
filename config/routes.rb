@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :users
   resources :games, only: [:index]
   resources :game_players, only: [:index]
+  resources :transactions, only: [:index, :create]
   post "/signup", to: "auth#signup"
   post "/login", to: "auth#login"
   get "/auto_login", to: "auth#auto_login"
