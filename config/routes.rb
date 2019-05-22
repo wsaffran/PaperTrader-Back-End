@@ -3,8 +3,8 @@ Rails.application.routes.draw do
 
   resources :users, only: [:index, :show, :create]
   resources :games, only: [:index]
-  resources :game_players, only: [:index]
-  resources :transactions, only: [:index, :create]
+  resources :game_players, only: [:index, :show, :update]
+  resources :transactions, only: [:index, :create, :update]
   post "/signup", to: "auth#signup"
   post "/login", to: "auth#login"
   get "/auto_login", to: "auth#auto_login"
