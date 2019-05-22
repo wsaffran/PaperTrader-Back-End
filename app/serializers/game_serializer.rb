@@ -1,5 +1,5 @@
 class GameSerializer < ActiveModel::Serializer
-  attributes :id, :name, :starting_balance, :start_date, :end_date #, :players
+  attributes :id, :name, :starting_balance, :start_date, :end_date, :game_players, :users
 
   has_many :game_players, serializer: GamePlayerSerializer
   has_many :users, through: :game_players, serializer: UserSerializer
