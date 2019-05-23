@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   get "/auto_login", to: "auth#auto_login"
   post "/new_game", to: "games#new_game"
   post "/join_game", to: "game_players#join_game"
-
+  get "/games/:id/rankings", to: "games#rankings"
 
 
 end
