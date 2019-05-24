@@ -46,7 +46,7 @@ class GamePlayersController < ApplicationController
           total_cost += transaction.price * transaction.current_shares
         end
       end
-      if total_shares > 0
+      if total_shares > 0        
         new_array.push({
           :ticker => ticker,
           :total_cost => total_cost,
@@ -54,7 +54,9 @@ class GamePlayersController < ApplicationController
           :cost_basis => total_cost / total_shares,
           :current_stock_price => stock_data[ticker]["quote"]["latestPrice"],
           :value_gain => (stock_data[ticker]["quote"]["latestPrice"] * total_shares - total_cost),
-          :current_value => total_shares * stock_data[ticker]["quote"]["latestPrice"]
+          :percent_gain => (((total_shares * stock_data[ticker]["quote"]["latestPrice"]) - total_cost) / total_cost * 100),
+          :current_value => total_shares * stock_data[ticker]["quote"]["latestPrice"],
+          :total_value => 5
         })
       end
     end

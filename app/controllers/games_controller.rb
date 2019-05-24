@@ -53,16 +53,16 @@ class GamesController < ApplicationController
 
     end
 
-    rankings.sort_by { |ranking| ranking[:current_value]}.reverse
+    new_rankings = rankings.sort { |a,b| a['current_value'] <=> b['current_value']}.reverse
 
     i = 1
 
-    rankings.map do |ranking|
+    new_rankings.map do |ranking|
       ranking.merge!(ranking: i)
       i += 1
     end
 
-    render json: rankings
+    render json: new_rankings
   end
 
 end
