@@ -11,6 +11,6 @@ Rails.application.routes.draw do
   post "/new_game", to: "games#new_game"
   post "/join_game", to: "game_players#join_game"
   get "/games/:id/rankings", to: "games#rankings"
-
+  get "/portfolio/:game_player_id", to: "game_players#portfolio"
 
 end

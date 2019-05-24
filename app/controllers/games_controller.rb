@@ -44,8 +44,9 @@ class GamesController < ApplicationController
         returns += (transaction.current_shares * stock_data[transaction.symbol]["quote"]["latestPrice"]) - (transaction.price * transaction.current_shares)
       end
 
-      returns = returns
+      # returns = current_value - game.starting_balance *** WHY IS THIS NOT WORKING
       current_value = game_player.cash_balance + returns
+      returns = current_value - game.starting_balance
       percent_gain = (current_value - game.starting_balance) / game.starting_balance * 100
 
       rankings.push({game_player_id: game_player.id, username: game_player.user.username, returns: returns, current_value: current_value, percent_gain: percent_gain, starting_balance: game.starting_balance})
