@@ -12,5 +12,7 @@ Rails.application.routes.draw do
   post "/join_game", to: "game_players#join_game"
   get "/games/:id/rankings", to: "games#rankings"
   get "/portfolio/:game_player_id", to: "game_players#portfolio"
+  post "/buy", to: "transactions#buy"
+  post "/sell", to: "transactions#sell"
 
 end

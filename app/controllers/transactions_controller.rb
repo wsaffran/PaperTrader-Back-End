@@ -19,6 +19,57 @@ class TransactionsController < ApplicationController
     render json: transaction
   end
 
+
+
+
+
+  def buy
+    transaction = Transaction.create(game_player_id: params[:game_player_id], symbol: params[:symbol], price: params[:price], current_shares: params[:current_shares], original_shares: params[:original_shares], transaction_date: params[:transaction_date])
+    game_player = GamePlayer.find_by(id: params[:game_player_id])
+    cash_balance = game_player.cash_balance
+    cash_balance -= params[:price] * params[:current_shares]
+    game_player.update(cash_balance: cash_balance)
+
+    render json: transaction
+  end
+
+  def sell
+    transaction = Transaction.create(game_player_id: params[:game_player_id], symbol: params[:symbol], price: params[:price], current_shares: params[:current_shares], original_shares: params[:original_shares], transaction_date: params[:transaction_date])
+
+    buy_orders = Transaction.select {|transaction| transaction.current_shares > 0 && transaction.symbol === params[:symbol]}
+    buy_orders.sort_by {|order| order.transaction_date}
+
+    shares_to_be_sold = -transaction.original_shares
+    cash_to_add = 0
+
+    buy_orders.each do |order|
+      if order.current_shares >= shares_to_be_sold
+        new_shares = order.current_shares - shares_to_be_sold
+        selected_transaction = Transaction.find_by_id(order.id)
+        selected_transaction.update(current_shares: new_shares)
+        cash_to_add += params[:price] * shares_to_be_sold
+        shares_to_be_sold = 0
+      elsif order.current_shares < shares_to_be_sold
+        cash_to_add += order.current_shares * params[:price]
+        shares_to_be_sold -= order.current_shares
+        selected_transaction = Transaction.find_by_id(order.id)
+        selected_transaction.update(current_shares: 0)
+      end
+    end
+
+    game_player = GamePlayer.find_by(id: params[:game_player_id])
+    new_balance = game_player.cash_balance + cash_to_add
+    game_player.update(cash_balance: new_balance)
+
+    render json: transaction
+  end
+
+
+
+
+
+
+
   # def create
   #
   #   if params[:type_of_transaction] == "buy"
