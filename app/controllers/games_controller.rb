@@ -44,12 +44,24 @@ class GamesController < ApplicationController
         returns += (transaction.current_shares * stock_data[transaction.symbol]["quote"]["latestPrice"]) - (transaction.price * transaction.current_shares)
       end
 
+
       # returns = current_value - game.starting_balance *** WHY IS THIS NOT WORKING
       current_value = game_player.cash_balance + returns
       returns = current_value - game.starting_balance
       percent_gain = (current_value - game.starting_balance) / game.starting_balance * 100
+      trades = game_player.transactions.length
 
-      rankings.push({game_player_id: game_player.id, username: game_player.user.username, returns: returns, current_value: current_value, percent_gain: percent_gain, starting_balance: game.starting_balance})
+      # totalDayChange(game_player, current_value, stock_data)
+
+      rankings.push({
+        game_player_id: game_player.id,
+        username: game_player.user.username,
+        returns: returns,
+        current_value: current_value,
+        percent_gain: percent_gain,
+        starting_balance: game.starting_balance,
+        trades: trades
+      })
 
     end
 
@@ -66,3 +78,26 @@ class GamesController < ApplicationController
   end
 
 end
+
+# def totalDayChange(game_player, current_value, stock_data)
+#
+#   total_cost = 0
+#     game_player.transactions.map(transaction => {
+#       return total_cost += transaction.price * transaction.current_shares
+#     })
+#
+#   current_cash_value = game_player.starting_cash - total_cost
+#
+#   starting = current_cash_value
+#   current = current_cash_value
+#
+#   game_player.transactions.map do |transaction|
+#     open_price = stock_data[transaction.symbol]["quote"]["open"]
+#     current_price = stock_data[transaction.symbol]["quote"]["latestPrice"]
+#
+#     starting += transaction.current_shares * open_price
+#     current += transaction.current_shares * current_price
+#   end
+#
+#   byebug
+# end

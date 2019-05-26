@@ -46,7 +46,8 @@ class GamePlayersController < ApplicationController
           total_cost += transaction.price * transaction.current_shares
         end
       end
-      if total_shares > 0        
+
+      if total_shares > 0
         new_array.push({
           :ticker => ticker,
           :total_cost => total_cost,

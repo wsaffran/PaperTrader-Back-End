@@ -21,4 +21,8 @@ class ApplicationController < ActionController::API
     User.find_by(id: decode_token)
   end
 
+
+
+  
+
 end
