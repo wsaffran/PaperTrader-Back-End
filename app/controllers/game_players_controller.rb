@@ -55,7 +55,9 @@ class GamePlayersController < ApplicationController
           :current_stock_price => stock_data[ticker]["quote"]["latestPrice"],
           :value_gain => (stock_data[ticker]["quote"]["latestPrice"] * total_shares - total_cost),
           :percent_gain => (((total_shares * stock_data[ticker]["quote"]["latestPrice"]) - total_cost) / total_cost * 100),
-          :current_value => total_shares * stock_data[ticker]["quote"]["latestPrice"]
+          :current_value => total_shares * stock_data[ticker]["quote"]["latestPrice"],
+          :day_change => stock_data[ticker]["quote"]["change"] * total_shares,
+          :day_change_percent => stock_data[ticker]["quote"]["changePercent"]
         })
       end
     end
