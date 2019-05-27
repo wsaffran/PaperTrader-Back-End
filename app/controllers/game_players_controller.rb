@@ -62,6 +62,21 @@ class GamePlayersController < ApplicationController
       end
     end
     new_array.sort_by {|a| a["symbol"]}.reverse
+
+    total_value = 0
+    new_array.each do |arr|
+      total_value += arr[:current_value]
+    end
+    game_player = GamePlayer.find_by(id: params[:game_player_id])
+    total_cash = game_player.cash_balance
+
+    total_value += total_cash
+
+    new_array.map do |arr|
+      arr.merge!(:percent_of_portfolio => arr[:current_value]/total_value)
+    end
+
+
     render json: new_array
   end
 

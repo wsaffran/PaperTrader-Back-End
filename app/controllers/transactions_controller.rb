@@ -27,18 +27,15 @@ class TransactionsController < ApplicationController
     transaction = Transaction.create(game_player_id: params[:game_player_id], symbol: params[:symbol], price: params[:price], current_shares: params[:current_shares], original_shares: params[:original_shares], transaction_date: params[:transaction_date])
     game_player = GamePlayer.find_by(id: params[:game_player_id])
     cash_balance = game_player.cash_balance
-    cash_balance -= params[:price] * params[:current_shares]
+    cash_balance -= params[:price] * params[:current_shares].to_i
     game_player.update(cash_balance: cash_balance)
-
     render json: transaction
   end
 
   def sell
     transaction = Transaction.create(game_player_id: params[:game_player_id], symbol: params[:symbol], price: params[:price], current_shares: params[:current_shares], original_shares: params[:original_shares], transaction_date: params[:transaction_date])
-
-    buy_orders = Transaction.select {|transaction| transaction.current_shares > 0 && transaction.symbol === params[:symbol]}
+    buy_orders = Transaction.select {|transaction| transaction.current_shares > 0 && transaction.symbol === params[:symbol] && transaction.game_player_id === params[:game_player_id]}
     buy_orders.sort_by {|order| order.transaction_date}
-
     shares_to_be_sold = -transaction.original_shares
     cash_to_add = 0
 

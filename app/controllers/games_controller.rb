@@ -41,7 +41,7 @@ class GamesController < ApplicationController
 
       # loop through each game_players transactions
       game_player.transactions.each do |transaction|
-        returns += (transaction.current_shares * stock_data[transaction.symbol]["quote"]["latestPrice"]) - (transaction.price * transaction.current_shares)
+        returns += (transaction.current_shares * stock_data[transaction.symbol]["quote"]["latestPrice"])# - (transaction.price * transaction.current_shares)
       end
 
       # returns = current_value - game.starting_balance *** WHY IS THIS NOT WORKING
@@ -49,7 +49,15 @@ class GamesController < ApplicationController
       returns = current_value - game.starting_balance
       percent_gain = (current_value - game.starting_balance) / game.starting_balance * 100
 
-      rankings.push({game_player_id: game_player.id, username: game_player.user.username, returns: returns, current_value: current_value, percent_gain: percent_gain, starting_balance: game.starting_balance})
+      rankings.push({
+        game_player_id: game_player.id,
+        username: game_player.user.username,
+        returns: returns,
+        current_value: current_value,
+        percent_gain: percent_gain,
+        starting_balance: game.starting_balance,
+        cash_value: game_player.cash_balance
+      })
 
     end
 
