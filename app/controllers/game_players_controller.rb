@@ -40,12 +40,37 @@ class GamePlayersController < ApplicationController
     distinct_tickers.each do |ticker|
       total_cost = 0
       total_shares = 0
+      total_price_before = 0
+      total_price_after = 0
       transactions.each do |transaction|
         if transaction.symbol == ticker
           total_shares += transaction.current_shares
           total_cost += transaction.price * transaction.current_shares
         end
       end
+      transactions.each do |transaction|
+        if transaction.symbol == ticker
+          total_price_before += (total_shares * stock_data[ticker]["quote"]["latestPrice"]) - (total_shares * stock_data[ticker]["quote"]["change"])
+          total_price_after += total_shares * stock_data[ticker]["quote"]["latestPrice"]
+        end
+      end
+      day_change_percent = (total_price_after - total_price_before) / total_price_before * 100
+
+
+      num_game_id = GamePlayer.find_by(id: params[:game_player_id]).game_id
+      num_game = Game.find_by(id: num_game_id).id
+      num_game_players = GamePlayer.select { |game_player| game_player.game_id == num_game}
+
+      num_holding = 0
+
+      num_game_players.each do |game_player|
+        num_distinct_tickers = game_player.transactions.map {|transaction| transaction.symbol}.uniq
+        if num_distinct_tickers.include?(ticker)
+          num_holding += 1
+        end
+      end
+
+
       if total_shares > 0
         new_array.push({
           :ticker => ticker,
@@ -56,8 +81,10 @@ class GamePlayersController < ApplicationController
           :value_gain => (stock_data[ticker]["quote"]["latestPrice"] * total_shares - total_cost),
           :percent_gain => (((total_shares * stock_data[ticker]["quote"]["latestPrice"]) - total_cost) / total_cost * 100),
           :current_value => total_shares * stock_data[ticker]["quote"]["latestPrice"],
+          :stock_day_change => stock_data[ticker]["quote"]["change"],
           :day_change => stock_data[ticker]["quote"]["change"] * total_shares,
-          :day_change_percent => stock_data[ticker]["quote"]["changePercent"]
+          :day_change_percent => day_change_percent,
+          :players_holding => num_holding
         })
       end
     end
