@@ -62,7 +62,7 @@ class GamesController < ApplicationController
     end
 
     new_rankings = rankings.sort { |a,b| a[:current_value] <=> b[:current_value]}.reverse
-    
+
     i = 1
 
     new_rankings.map do |ranking|

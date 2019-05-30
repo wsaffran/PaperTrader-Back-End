@@ -61,7 +61,25 @@ class TransactionsController < ApplicationController
     render json: transaction
   end
 
+  def stats
+    game = Game.find_by(id: params[:game_id])
 
+    game_players = GamePlayer.select { |player| player.game_id == game.id}
+    # game_players = game.game_players
+
+    max = 0
+    highest_transactions_player = ''
+
+    game_players.each do |player|
+      transactions = Transaction.all.select {|t| t.game_player_id == player.id}
+      transaction_count = transactions.length
+      if (transaction_count > max)
+        highest_transactions_player = User.all.find{|user| user.id == player.user_id}
+      end
+    end
+
+    render json: highest_transactions_player
+  end
 
 
 
