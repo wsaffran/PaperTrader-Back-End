@@ -14,5 +14,6 @@ Rails.application.routes.draw do
   get "/portfolio/:game_player_id", to: "game_players#portfolio"
   post "/buy", to: "transactions#buy"
   post "/sell", to: "transactions#sell"
+  get "/stats/:game_id", to: "transactions#stats"
 
 end
